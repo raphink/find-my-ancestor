@@ -1,0 +1,284 @@
+<!--
+Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+PDX-License-Identifier: MIT-0 (For details, see https://github.com/awsdocs/amazon-rekognition-developer-guide/blob/master/LICENSE-SAMPLECODE.)
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script src="aws-cognito-sdk.min.js"></script>
+  <script src="amazon-cognito-identity.min.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.16.0.min.js"></script>
+  <script src="base58.js"></script>
+  <meta charset="UTF-8">
+  <title>Rekognition</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Face detection in </a>
+
+        <form class="navbar-form navbar-right">
+            <div class="form-group">
+                <select id="collection" class="form-control">
+                    <option value="flick-72157670786830428">Boer War Pictures</option>
+                    <option value="flickr">historicandoldphotos group</option>
+                </select>
+            </div>
+        </form>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row" id="counter">
+            <div class="col-6">
+                <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*">
+            </div>
+            <div class="col-6">
+              Match <input type="number" maxlength="4" id="curMatch" style="width:50px;" /> of <span id="totalMatches"></span>
+            </div>
+        </div>
+        <div class="row" id="nav">
+            <div class="col-6">
+            </div>
+            <div class="col-6">
+                <a href="javascript:prevMatch();" id="prev">« prev match</a>&nbsp;-&nbsp;<a href="javascript:nextMatch();" id="next">next match »</a>
+            </div>
+        </div>
+        <div class="row" id="infos">
+            <div class="col-6">
+            Quality:
+                <ul id="quality" style="display:none;">
+                    <li id="brightness"></li>
+                    <li id="sharpness"></li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <div id="simil"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div id="img1-cont" style="position:relative;">
+                    <img id="img1" width="80%" style="position:absolute;" />
+                    <div id="box1" style="position:absolute;border:1px solid red;display:none;">&nbsp;</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div id="img2-cont" style="position:relative;">
+                    <div class="jumbotron" style="position:absolute;"><h1>Welcome to the face detector</h1><p id="message">Select a collection and upload a picture</p></div>
+                    <a id="img2link" href="#" target="_blank">
+                        <img id="img2" width="80%" style="position:absolute;" />
+                    </a>
+                    <div id="box2" style="position:absolute;border:1px solid red;display:none;">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+  $('#fileToUpload').change(function() {
+      ProcessImage();
+  });
+
+  $('#collection').change(function() {
+      DetectFaces();
+  });
+
+  var matches = [];
+  var curMatch = 0;
+
+  function DetectFaces() {
+    AWS.region = "eu-west-1";
+    var rekognition = new AWS.Rekognition();
+    var params = {
+      Image: {
+        Bytes: imageBytes
+      }
+    };
+    $('#box1').hide();
+    $('#quality').hide();
+    $('#img2').attr('src', '');
+    $('#box2').hide();
+    $('#simil').hide();
+    $('#totalMatches').text(0);
+    $('#curMatch').val(0);
+
+    $('#message').text('Detecting faces');
+    rekognition.detectFaces(params, function (err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else {
+        console.log(data);
+        var details = data.FaceDetails[0];
+        var box = details.BoundingBox;
+        imgE = $("#img1");
+        $('#box1').css({top: imgE.height()*box.Top, left: imgE.width()*box.Left, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
+        $('#box1').show();
+
+
+        $('#brightness').text('Brightness: '+Number.parseFloat(details.Quality.Brightness).toPrecision(4)+'%');
+        colorInfo('#brightness', details.Quality.Brightness, 90, 70);
+        $('#sharpness').text('Sharpness: '+Number.parseFloat(details.Quality.Sharpness).toPrecision(4)+'%');
+        colorInfo('#sharpness', details.Quality.Sharpness, 90, 70);
+        $('#quality').show();
+
+        if (match.Similarity > 99) {
+            $('#simil').css({color: 'green'});
+        } else if (match.Similarity > 90) {
+            $('#simil').css({color: 'orange'});
+        } else {
+            $('#simil').css({color: 'red'});
+        }
+      }
+    });
+    var collection = $('#collection').val();
+    var params = {
+      CollectionId: collection,
+      FaceMatchThreshold: 80,
+      Image: {
+        Bytes: imageBytes
+      }
+    };
+    rekognition.searchFacesByImage(params, function (err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else {
+        console.log(data);
+        matches = data.FaceMatches;
+        if (matches.length == 0) {
+            $('#message').text("No matches found");
+        } else {
+            curMatch = 0;
+            dispMatch();
+        }
+      }
+    });
+  }
+
+  function colorInfo(elem, val, green, orange) {
+    if (val > green) {
+        $(elem).css({color: 'green'});
+    } else if (val > orange) {
+        $(elem).css({color: 'orange'});
+    } else {
+        $(elem).css({color: 'red'});
+    }
+  }
+
+  function prevMatch() {
+    curMatch -= 1;
+    dispMatch();
+  }
+
+  function nextMatch() {
+    curMatch += 1;
+    dispMatch();
+  }
+
+  function dispMatch() {
+        $('#totalMatches').text(matches.length);
+        $('#curMatch').val(curMatch+1);
+
+        if (curMatch == 0) {
+            $('#prev').hide();
+        } else {
+            $('#prev').show();
+        }
+
+        if (curMatch == matches.length-1 || matches.length == 0) {
+            $('#next').hide();
+        } else {
+            $('#next').show();
+        }
+
+        var match = matches[curMatch];
+        var img = match.Face.ExternalImageId;
+        var bits = img.split(':');
+        var imgE = $('#img2');
+        imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
+        $("#img2link").attr('href', "https://flic.kr/p/"+base58.encode(parseInt(bits[3])), "_blank");
+        $('#simil').text('Similarity: '+Number.parseFloat(match.Similarity).toPrecision(4)+'%');
+        colorInfo('#simil', match.Similarity, 99, 90);
+        $('#simil').show();
+
+        var box = match.Face.BoundingBox;
+        imgE.on('load', function() {
+          $('#box2').css({top: imgE.height()*box.Top, left: imgE.width()*box.Left, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
+          $('#box2').show();
+        });
+  }
+
+  var imageBytes;
+
+  //Loads selected image and unencodes image bytes for Rekognition DetectFaces API
+  function ProcessImage() {
+    AnonLog();
+    var control = document.getElementById("fileToUpload");
+    var file = control.files[0];
+    if(file.size > 2097152){
+       alert("File is too big (2MB max)!");
+       return;
+    };
+
+    // Load base64 encoded image
+    var reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return function (e) {
+        //var img = document.createElement('img');
+        var img = document.getElementById("img1");
+        var image = null;
+        img.src = e.target.result;
+        var jpg = true;
+        try {
+          image = atob(e.target.result.split("data:image/jpeg;base64,")[1]);
+
+        } catch (e) {
+          jpg = false;
+        }
+        if (jpg == false) {
+          try {
+            image = atob(e.target.result.split("data:image/png;base64,")[1]);
+          } catch (e) {
+            alert("Not an image file Rekognition can process");
+            return;
+          }
+        }
+        //unencode image bytes for Rekognition DetectFaces API
+        var length = image.length;
+        imageBytes = new ArrayBuffer(length);
+        var ua = new Uint8Array(imageBytes);
+        for (var i = 0; i < length; i++) {
+          ua[i] = image.charCodeAt(i);
+        }
+        //Call Rekognition
+        DetectFaces();
+      };
+    })(file);
+    reader.readAsDataURL(file);
+  }
+  //Provides anonymous log on to AWS services
+  function AnonLog() {
+
+    // Configure the credentials provider to use your identity pool
+    AWS.config.region = 'eu-west-1'; // Region
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: 'eu-west-1:99b93f57-2e55-43c2-a577-71a64c5031a4',
+    });
+    // Make the call to obtain credentials
+    AWS.config.credentials.get(function () {
+      // Credentials will be available when this function is called.
+      var accessKeyId = AWS.config.credentials.accessKeyId;
+      var secretAccessKey = AWS.config.credentials.secretAccessKey;
+      var sessionToken = AWS.config.credentials.sessionToken;
+    });
+  }
+</script>
+</html>
