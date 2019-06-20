@@ -219,8 +219,8 @@
     AnonLog();
     var control = document.getElementById("fileToUpload");
     var file = control.files[0];
-    if(file.size > 2097152){
-       alert("File is too big (2MB max)!");
+    if(file.size > 5242880){
+       alert("File is too big (5MB max)!");
        return;
     };
 
