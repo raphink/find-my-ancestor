@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <style type="text/css">
-.loader {
+#loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;
   animation: spin 2s linear infinite;
+  display: none;
 }
 
 @keyframes spin {
@@ -90,7 +91,7 @@
                     <div class="jumbotron" style="position:absolute;">
                         <h1>Welcome to the face detector</h1>
                         <p id="message">Select a collection and upload a picture</p>
-                        <div class="loader"></div>
+                        <div id="loader"></div>
                     </div>
                     <a id="img2link" href="#" target="_blank">
                         <img id="img2" width="80%" style="position:absolute;" />
