@@ -15,9 +15,11 @@ rekognition = Aws::Rekognition::Client.new(
   profile: 'perso',
 )
 
-group_id = '68361764@N00' # historicandoldphotos
+group_name = ARGV[0]
+group_id = flickr.urls.lookupGroup(url: "https://www.flickr.com/groups/#{group_name}/").id
+last_known = "#{group_id}.last_known_page"
 page = 1
-page = File.read('last_known_page').chomp.to_i if File.file?('last_known_page')
+page = File.read(last_known).chomp.to_i if File.file?(last_known)
 imported = 0
 
 loop do
@@ -25,7 +27,7 @@ loop do
   begin
 	  photos = flickr.groups.pools.getPhotos(group_id: group_id, per_page: 500, page: page)
 	  break if photos.length == 0
-	  File.open('last_known_page', 'w') { |f| f.puts page }
+	  File.open(last_known, 'w') { |f| f.puts page }
   rescue
 	  puts "W: failed to get photos from page, retrying"
 	  retry
