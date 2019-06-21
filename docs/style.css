@@ -1,0 +1,66 @@
+a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.previous {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.next {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.round {
+  border-radius: 50%;
+}
+
+#curMatch {
+  width: 50px;
+}
+
+#quality {
+  display: none;
+}
+
+div.img-cont {
+  position: relative;
+}
+
+div.img-cont img {
+  position: absolute;
+  width: 80%;
+}
+
+div.img-cont div {
+  position: absolute;
+}
+
+div.img-cont div.box {
+    position:absolute;
+    border:1px solid red;
+    display:none;
+}
+
+#loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

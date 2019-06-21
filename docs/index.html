@@ -8,22 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <style type="text/css">
-#loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  display: none;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-    </style>
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -49,16 +34,16 @@
                 <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*">
             </div>
             <div class="col-3">
-              Match <input type="number" maxlength="4" id="curMatch" style="width:50px;" /> of <span id="totalMatches"></span>
+              Match <input type="number" maxlength="4" id="curMatch" /> of <span id="totalMatches"></span>
             </div>
             <div>
-                <a href="javascript:prevMatch();" id="prev">« prev match</a>&nbsp;-&nbsp;<a href="javascript:nextMatch();" id="next">next match »</a>
+                <a href="javascript:prevMatch();" class="previous round">&#8249;</a> <a href="javascript:nextMatch();" class="next round">&#8250;</a>
             </div>
         </div>
         <div class="row" id="infos">
             <div class="col-6">
             Quality:
-                <ul id="quality" style="display:none;">
+                <ul id="quality">
                     <li id="brightness"></li>
                     <li id="sharpness"></li>
                 </ul>
@@ -73,23 +58,21 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div id="img1-cont" style="position:relative;">
-                    <img id="img1" width="80%" style="position:absolute;" />
-                    <div id="box1" style="position:absolute;border:1px solid red;display:none;">&nbsp;</div>
+                <div class="img-cont">
+                    <img id="img1" />
+                    <div class="box" id="box1"></div>
                 </div>
             </div>
             <div class="col-6">
-                <div id="img2-cont" style="position:relative;">
-                    <div class="jumbotron" style="position:absolute;">
+                <div class="img-cont">
+                    <div class="jumbotron">
                         <h1>Welcome to the face detector</h1>
                         <p>This page allows to search for detected faces in a set of historic pictures scanned on Flickr.</p>
                         <p id="message">Start by uploading a picture.</p>
                         <div id="loader"></div>
                     </div>
-                    <a id="img2link" href="#" target="_blank">
-                        <img id="img2" width="80%" style="position:absolute;" />
-                    </a>
-                    <div id="box2" style="position:absolute;border:1px solid red;display:none;">&nbsp;</div>
+                    <img id="img2" />
+                    <div class="box" id="box2"></div>
                 </div>
             </div>
         </div>
@@ -216,7 +199,6 @@
         var imgE = $('#img2');
         imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
         var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
-        $("#img2link").attr('href', url, "_blank");
         $('#simil').text('Similarity: '+Number.parseFloat(match.Similarity).toPrecision(4)+'%');
         colorInfo('#simil', match.Similarity, 99, 90);
         $('#simil').show();
