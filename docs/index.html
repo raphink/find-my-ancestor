@@ -230,7 +230,7 @@
             var description = response.photo.description._content;
             $('#description a').attr('href', url);
             $('#description a h3').text(title);
-            $('#description p').text(description);
+            $('#description p').html(description);
             $('#description').show();
         });
 
