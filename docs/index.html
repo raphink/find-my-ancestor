@@ -5,86 +5,109 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- Latest compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 
-  <script src="aws-cognito-sdk.min.js"></script>
-  <script src="amazon-cognito-identity.min.js"></script>
-  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.16.0.min.js"></script>
-  <script src="base58.js"></script>
-  <script src="flickr.js"></script>
-  <meta charset="UTF-8">
-  <title>Rekognition</title>
+    <script src="aws-cognito-sdk.min.js"></script>
+    <script src="amazon-cognito-identity.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.16.0.min.js"></script>
+    <script src="base58.js"></script>
+    <script src="flickr.js"></script>
+    <meta charset="UTF-8">
+    <title>Rekognition</title>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Face detection in Flickr albums and groups</a>
+        <div class="row">
+            <div class="col-md-6">
+                <a class="navbar-brand" href="#">Face detection in Flickr albums and groups</a>
+            </div>
+            <div class="col-md-6">
+                        <ul class="pager">
+                            <li id="prev" class="previous"><a href="javascript:prevMatch();">Previous</a></li>
+                            <li id="next" class="next"><a href="javascript:nextMatch();">Next</a></li>
+                        </ul>
+            </div>
+        </div>
     </nav>
 
     <div class="container-fluid">
-        <div class="row" id="counter">
-            <div class="col-6">
-                <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*">
-            </div>
-            <div class="col-3">
-              Match <input type="number" maxlength="4" id="curMatch" /> of <span id="totalMatches"></span>
-            </div>
-            <div>
-                <a id="prev" href="javascript:prevMatch();" class="previous round">&#8249;</a> <a id="next" href="javascript:nextMatch();" class="next round">&#8250;</a>
-            </div>
-        </div>
         <div class="row" id="infos">
-            <div class="col-6">
-            Quality:
-                <ul id="quality">
-                    <li id="brightness"></li>
-                    <li id="sharpness"></li>
-                </ul>
-            </div>
-            <div class="col-6">
-                <div id="simil"></div>
-                <div id="description">
-                    <a href="#" target="_blank"><h3></h3></a>
-                    <p></p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="img-cont">
-                    <img id="img1" />
-                    <div class="box" id="box1"></div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="img-cont">
-                    <div class="jumbotron">
-                        <h1>Welcome to the face detector</h1>
-                        <p>This page allows to search for detected faces in a set of historic pictures scanned on Flickr.</p>
-                        <p id="message">Start by uploading a picture.</p>
-                        <div id="loader"></div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span class="btn-group">
+                                <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*">
+                        </span>
+                        <span id="quality" class="pull-right">
+                            <span class="label label-default">
+                                Brightness <span id="brightness" class="badge"></span>
+                            </span>
+
+                            <span class="label label-default">
+                                Sharpness <span id="sharpness" class="badge"></span>
+                            </span>
+                        </span>
                     </div>
-                    <img id="img2" />
-                    <div class="box" id="box2"></div>
+                    <div class="panel-body img-cont">
+                        <img id="img1" />
+                        <div class="box" id="box1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span>Match <input type="number" maxlength="4" id="curMatch" /> of <span id="totalMatches"></span></span>
+                        <span id="similarity" class="pull-right">
+                            <span class="label label-default">
+                                Similarity <span id="simil" class="badge"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="panel-body img-cont">
+                        <div class="jumbotron">
+                            <h1>Welcome to the face detector</h1>
+                            <p>This page allows to search for detected faces in a set of historic pictures scanned on Flickr.</p>
+                            <p id="message">Start by uploading a picture.</p>
+                            <div id="loader"></div>
+                        </div>
+                        <img id="img2" />
+                        <div class="box" id="box2"></div>
+                        <div id="description">
+                            <hr />
+                            <a href="#" target="_blank"><h3></h3></a>
+                            <p></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
 <script>
+  var matches = [];
+  var curMatch = 0;
+
   $('#fileToUpload').change(function() {
       ProcessImage();
   });
 
-  var matches = [];
-  var curMatch = 0;
+  $('#curMatch').change(function() {
+      curMatch = parseInt($('#curMatch').val()) - 1;
+      dispMatch();
+  });
 
   function DetectFaces() {
     AWS.region = "eu-west-1";
@@ -98,7 +121,7 @@
     $('#quality').hide();
     $('#img2').attr('src', '');
     $('#box2').hide();
-    $('#simil').hide();
+    $('#similarity').hide();
     $('#totalMatches').text(0);
     $('#curMatch').val(0);
     $('#description').hide();
@@ -113,13 +136,14 @@
         var details = data.FaceDetails[0];
         var box = details.BoundingBox;
         imgE = $("#img1");
-        $('#box1').css({top: imgE.height()*box.Top, left: imgE.width()*box.Left, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
+        // 15px padding
+        $('#box1').css({top: imgE.height()*box.Top+15, left: imgE.width()*box.Left+15, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
         $('#box1').show();
 
 
-        $('#brightness').text('Brightness: '+Number.parseFloat(details.Quality.Brightness).toPrecision(4)+'%');
+        $('#brightness').text(Number.parseFloat(details.Quality.Brightness).toPrecision(4)+'%');
         colorInfo('#brightness', details.Quality.Brightness, 90, 70);
-        $('#sharpness').text('Sharpness: '+Number.parseFloat(details.Quality.Sharpness).toPrecision(4)+'%');
+        $('#sharpness').text(Number.parseFloat(details.Quality.Sharpness).toPrecision(4)+'%');
         colorInfo('#sharpness', details.Quality.Sharpness, 90, 70);
         $('#quality').show();
 
@@ -199,9 +223,9 @@
         var imgE = $('#img2');
         imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
         var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
-        $('#simil').text('Similarity: '+Number.parseFloat(match.Similarity).toPrecision(4)+'%');
+        $('#simil').text(Number.parseFloat(match.Similarity).toPrecision(4)+'%');
         colorInfo('#simil', match.Similarity, 99, 90);
-        $('#simil').show();
+        $('#similarity').show();
 
         // Flickr title and description
         var flickrApiKey = '686e331b830f5e61da5fc08906a328fa';
@@ -219,7 +243,8 @@
 
         var box = match.Face.BoundingBox;
         imgE.on('load', function() {
-          $('#box2').css({top: imgE.height()*box.Top, left: imgE.width()*box.Left, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
+          // 15px padding
+          $('#box2').css({top: imgE.height()*box.Top+15, left: imgE.width()*box.Left+15, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
           $('#box2').show();
         });
   }
