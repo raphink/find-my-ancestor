@@ -69,7 +69,10 @@
             </div>
             <div class="col-6">
                 <div id="simil"></div>
-                <div id="description"></div>
+                <div id="description">
+                    <a href="#" target="_blank"><h3></h3></a>
+                    <p></p>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -216,7 +219,8 @@
         var bits = img.split(':');
         var imgE = $('#img2');
         imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
-        $("#img2link").attr('href', "https://flic.kr/p/"+base58.encode(parseInt(bits[3])), "_blank");
+        var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
+        $("#img2link").attr('href', url, "_blank");
         $('#simil').text('Similarity: '+Number.parseFloat(match.Similarity).toPrecision(4)+'%');
         colorInfo('#simil', match.Similarity, 99, 90);
         $('#simil').show();
@@ -228,7 +232,9 @@
             console.log(response);
             var title = response.photo.title._content;
             var description = response.photo.description._content;
-            $('#description').text(title+': '+description);
+            $('#description a').attr('href', url);
+            $('#description a h3').text(title);
+            $('#description p').text(description);
             $('#description').show();
         });
 

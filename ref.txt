@@ -18,4 +18,5 @@ photoset_id = 72157661354163663  # boer war
 group_id = '68361764@N00' # historicandoldphotos
 group_id ='343796@N20' # cartes-postales-anciennes
 group_id = '800965@N21' # greatwararchive
-
+photoset_id = 72157695720107784  # Bogrand 14-18
+photoset_id = 72157628617704873  # Transvaal 1900
