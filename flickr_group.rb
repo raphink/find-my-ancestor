@@ -17,25 +17,35 @@ rekognition = Aws::Rekognition::Client.new(
 
 group_id = '68361764@N00' # historicandoldphotos
 page = 1
+page = File.read('last_known_page').chomp.to_i if File.file?('last_known_page')
 imported = 0
 
 loop do
-  photos = flickr.groups.pools.getPhotos(group_id: group_id, per_page: 500, page: page)
-  break if photos.length == 0
+  puts "I: Getting photos from page #{page}"
+  begin
+	  photos = flickr.groups.pools.getPhotos(group_id: group_id, per_page: 500, page: page)
+	  break if photos.length == 0
+	  File.open('last_known_page', 'w') { |f| f.puts page }
+  rescue
+	  puts "W: failed to get photos from page, retrying"
+	  retry
+  end
 
   photos.each do |pic|
       url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
       ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
 
+      begin
       img = open(url)
-
       puts "Importing #{ref} (#{url}) into collection"
-
       rekognition.index_faces({
           collection_id: 'flickr',
           image: { bytes: img.read },
           external_image_id: ref,
       })
+      rescue => e
+        puts "W: failed to import #{ref} (#{url}): #{e}"
+      end
   end
 
   page += 1
