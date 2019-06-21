@@ -15,21 +15,30 @@ rekognition = Aws::Rekognition::Client.new(
   region: 'eu-west-1',
   profile: 'perso',
 )
-set = flickr.photosets.getPhotos(photoset_id: photoset_id)
 
-set.photo.each do |pic|
-  url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
-  ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
+page = 1
+imported = 0
+loop do
+  puts "I: Getting photos from page #{page}"
+  set = flickr.photosets.getPhotos(photoset_id: photoset_id, page: page)
+  break if set.photo.length == 0
+  set.photo.each do |pic|
+    url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
+    ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
 
-  img = open(url)
+    img = open(url)
 
-  puts "Importing #{ref} (#{url}) into collection"
+    puts "Importing #{ref} (#{url}) into collection"
 
-  rekognition.index_faces({
-      collection_id: 'flickr',
-      image: { bytes: img.read },
-      external_image_id: ref,
-  })
+    rekognition.index_faces({
+        collection_id: 'flickr',
+        image: { bytes: img.read },
+        external_image_id: ref,
+    })
+  end
+
+  page += 1
+  imported += set.photo.length
 end
 
 puts "imported #{set.photo.length} photos"
