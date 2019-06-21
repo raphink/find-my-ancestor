@@ -33,6 +33,7 @@
   <script src="amazon-cognito-identity.min.js"></script>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.16.0.min.js"></script>
   <script src="base58.js"></script>
+  <script src="flickr.js"></script>
   <meta charset="UTF-8">
   <title>Rekognition</title>
 </head>
@@ -68,6 +69,7 @@
             </div>
             <div class="col-6">
                 <div id="simil"></div>
+                <div id="description"></div>
             </div>
         </div>
         <div class="row">
@@ -117,6 +119,8 @@
     $('#simil').hide();
     $('#totalMatches').text(0);
     $('#curMatch').val(0);
+    $('#description').hide();
+    $('.jumbotron').show();
 
     $('#message').text('Detecting faces');
     $('#loader').show();
@@ -163,6 +167,7 @@
             $('#message').text("No matches found");
             $('#loader').hide();
         } else {
+            $('.jumbotron').hide();
             curMatch = 0;
             dispMatch();
         }
@@ -215,6 +220,18 @@
         $('#simil').text('Similarity: '+Number.parseFloat(match.Similarity).toPrecision(4)+'%');
         colorInfo('#simil', match.Similarity, 99, 90);
         $('#simil').show();
+
+        // Flickr title and description
+        var flickrApiKey = '686e331b830f5e61da5fc08906a328fa';
+        var flickr = new Flickr(flickrApiKey);
+        flickr.photos.getInfo(bits[3], function(response) {
+            console.log(response);
+            var title = response.photo.title._content;
+            var description = response.photo.description._content;
+            $('#description').text(title+': '+description);
+            $('#description').show();
+        });
+
 
         var box = match.Face.BoundingBox;
         imgE.on('load', function() {
