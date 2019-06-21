@@ -33,12 +33,6 @@
             <div class="col-md-6">
                 <a class="navbar-brand" href="#">Face detection in Flickr albums and groups</a>
             </div>
-            <div class="col-md-6">
-                        <ul class="pager">
-                            <li id="prev" class="previous"><a href="javascript:prevMatch();">Previous</a></li>
-                            <li id="next" class="next"><a href="javascript:nextMatch();">Next</a></li>
-                        </ul>
-            </div>
         </div>
     </nav>
 
@@ -70,6 +64,10 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <span>Match <input type="number" maxlength="4" id="curMatch" /> of <span id="totalMatches"></span></span>
+                        <span id="pager" class="pager pull-right">
+                                <span id="prev"><a href="javascript:prevMatch();">Previous</a></span> |
+                                <span id="next"><a href="javascript:nextMatch();">Next</a></span>
+                        </span>
                         <span id="similarity" class="pull-right">
                             <span class="label label-default">
                                 Similarity <span id="simil" class="badge"></span>
@@ -125,6 +123,7 @@
     $('#totalMatches').text(0);
     $('#curMatch').val(0);
     $('#description').hide();
+    $('.pager').hide();
     $('.jumbotron').show();
 
     $('#message').text('Detecting faces');
@@ -246,6 +245,7 @@
           // 15px padding
           $('#box2').css({top: imgE.height()*box.Top+15, left: imgE.width()*box.Left+15, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
           $('#box2').show();
+          $('.pager').show();
         });
   }
 

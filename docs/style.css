@@ -1,8 +1,4 @@
 
-.pager .next>a, .pager .next>span {
-  margin: 0 15px 0 15px;
-}
-
 #curMatch {
   width: 50px;
   color: #777;
@@ -50,6 +46,16 @@ div.img-cont div.box {
   border:1px solid red;
   display:none;
 }
+
+.pager {
+  display: none;
+  margin: 0 10px 0 10px;
+}
+
+.pager span a {
+  color: white;
+}
+
 
 .jumbotron {
   width: calc(100% - 30px);
