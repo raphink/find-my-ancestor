@@ -1,0 +1,21 @@
+[flick-72157670786830428]
+photoset_id = 72157670786830428  # boer war
+photoset_id = 72157602655176620  # boer war
+photoset_id = 72157638175663535  # boer war
+photoset_id = 72157628633710511  # boer war
+photoset_id = 72157630844398696  # boer war
+photoset_id = 72157673036030157  # boer war
+photoset_id = 72157661354163663  # boer war
+
+[flickr]
+photoset_id = 72157670786830428  # boer war
+photoset_id = 72157602655176620  # boer war
+photoset_id = 72157638175663535  # boer war
+photoset_id = 72157628633710511  # boer war
+photoset_id = 72157630844398696  # boer war
+photoset_id = 72157673036030157  # boer war
+photoset_id = 72157661354163663  # boer war
+group_id = '68361764@N00' # historicandoldphotos
+group_id ='343796@N20' # cartes-postales-anciennes
+group_id = '800965@N21' # greatwararchive
+
