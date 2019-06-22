@@ -20,3 +20,70 @@ group_id ='343796@N20' # cartes-postales-anciennes
 group_id = '800965@N21' # greatwararchive
 photoset_id = 72157695720107784  # Bogrand 14-18
 photoset_id = 72157628617704873  # Transvaal 1900
+group_name = 'vintagepostcards'
+group_name = 'vintage_military_photos'
+group_name = 'old_photos'
+group_id = '364521@N21' # Photo of the world wars
+group_id = '42918849@N00'  # Pre-1930 Photos
+photoset_id = '72157601994295949' # Photos anciennes
+photoset_id = '72157631553760305' # Expo Universelle 1889 Paris
+photoset_id = '72157652001771832' # Photos anciennes
+photoset_id = '72157606723912675' # Cartes Postales anciennes
+photoset_id = '72157626698209703' # Cartes Postales Anciennes
+photoset_id = '72157600262519982' # Vintage
+photoset_id = '72157651665810438' # Gares toulousaines pendant la Grande Guerre
+photoset_id = '72157647335451817' # Hôpitaux toulousains pendant la Grande Guerre
+photoset_id = '72157690880352346' # "La guerre, la guerre... "
+photoset_id = '72157639799073775' # Metz et la Grande guerre
+photoset_id = '72157634365731732' # Tranchées
+72157594315410944
+72157669702392936
+72157640360261344
+72157628053998640
+72157661554625500
+72157684315818311
+72157627119617935
+72157624269037678
+72157627425640786
+72157627305711438
+72157627066230759
+72157627840749709
+72157627119800371
+72157624481937822
+72157624834774608
+72157626778649443
+72157627181541285
+72157626778887199
+72157626778761641
+72157627120774357
+72157627183158574
+1035129@N25
+72157630752475570
+old_pictures
+victorian
+1331714@N24
+1352064@N20
+memoryfades
+889472@N20
+392373@N21
+453919@N21
+ambrotypes
+earlyphotoinromania
+1399601@N20
+1691404@N21
+1688545@N21
+687625@N25
+1553717@N25
+1680431@N22
+76837992@N00
+
+
+# TODO galleries
+
+72157688900867510
+photoset_id = '72157674566023878'
+photoset_id = '72157705608306861'
+
+
+
+# TODO
