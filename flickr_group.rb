@@ -30,6 +30,7 @@ loop do
 	  File.open(last_known, 'w') { |f| f.puts page }
   rescue
 	  puts "W: failed to get photos from page, retrying"
+      sleep 2
 	  retry
   end
 
