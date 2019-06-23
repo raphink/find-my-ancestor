@@ -107,6 +107,22 @@ oldletters
 1194041@N24
 47255139@N00
 user: photohistorytimeline
+user: genealogus
+user: 58646687@N08
+user: national_library_of_norway
+user: internetarchivebookimages
+user: tempvsfvgit
+72157608440347966
+vintage_portraiture
+2106905@N20
+1211225@N20
+67147471@N00
+1079766@N24
+1961184@N23
+539085@N22
+989247@N21
+1459463@N25
+
 
 # TODO galleries
 
