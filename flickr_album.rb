@@ -41,4 +41,4 @@ loop do
   imported += set.photo.length
 end
 
-puts "imported #{set.photo.length} photos"
+puts "imported #{imported} photos"
