@@ -122,6 +122,8 @@ vintage_portraiture
 539085@N22
 989247@N21
 1459463@N25
+theflipside
+1798452@N21
 
 
 # TODO galleries
