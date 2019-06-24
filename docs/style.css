@@ -47,6 +47,14 @@ div.img-cont div.box {
   display:none;
 }
 
+div.img-cont div.box.selected {
+  border:2px solid yellow;
+}
+
+canvas {
+  display: none;
+}
+
 .pager {
   display: none;
   margin: 0 10px 0 10px;
