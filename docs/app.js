@@ -174,6 +174,7 @@ function dispMatch() {
     var imgE = $('#img2');
     imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
     var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
+    $('#img2-link').attr('href', url);
     $('#simil').text(Number.parseFloat(match.Similarity).toPrecision(4)+'%');
     colorInfo('#simil', match.Similarity, 99, 90);
     $('#similarity').show();
