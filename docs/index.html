@@ -152,6 +152,11 @@
                       searchFace(reko, img, boxE, box);
                   });
               }(rekognition, imgE, boxE, box);
+
+              if (data.FaceDetails.length == 1) {
+                  // only one face, search for it now
+                  searchFace(rekognition, imgE, boxE, box);
+              }
           }
 
           $('#brightness').text(Number.parseFloat(details.Quality.Brightness).toPrecision(4)+'%');
