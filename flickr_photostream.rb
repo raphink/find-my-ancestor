@@ -24,6 +24,7 @@ loop do
   puts "I: Getting photos from page #{page}"
   photos = flickr.people.getPhotos(user_id: user, page: page)
   break if photos.length == 0
+  File.open(last_known, 'w') { |f| f.puts page }
   photos.each do |pic|
     url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
     ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
