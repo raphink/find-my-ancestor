@@ -153,8 +153,8 @@
                   });
               }(rekognition, imgE, boxE, box);
 
-              if (data.FaceDetails.length == 1) {
-                  // only one face, search for it now
+              if (i == 0) {
+                  // search for first face automatically
                   searchFace(rekognition, imgE, boxE, box);
               }
           }
