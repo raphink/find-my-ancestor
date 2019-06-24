@@ -16,7 +16,9 @@ rekognition = Aws::Rekognition::Client.new(
   profile: 'perso',
 )
 
+last_known = "#{user}.user.last_known_page"
 page = 1
+page = File.read(last_known).chomp.to_i if File.file?(last_known)
 imported = 0
 loop do
   puts "I: Getting photos from page #{page}"
