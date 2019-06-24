@@ -47,6 +47,10 @@ div.img-cont div.box {
   display:none;
 }
 
+#img1-cont div.box {
+  cursor: pointer;
+}
+
 div.img-cont div.box.selected {
   border:2px solid yellow;
 }

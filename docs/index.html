@@ -126,7 +126,7 @@
     $('.pager').hide();
     $('.jumbotron').show();
 
-    $('#message').text('Detecting faces');
+    $('#message').text('Detecting faces…');
     $('#loader').show();
     rekognition.detectFaces(params, function (err, data) {
       if (err) console.log(err, err.stack); // an error occurred
@@ -159,6 +159,9 @@
           $('#sharpness').text(Number.parseFloat(details.Quality.Sharpness).toPrecision(4)+'%');
           colorInfo('#sharpness', details.Quality.Sharpness, 90, 70);
           $('#quality').show();
+
+          $('#message').text('Select a face in the picture to search for matches');
+          $('#loader').hide();
       }
     });
   }
@@ -167,7 +170,19 @@
       $('#img1-cont div.box').removeClass('selected');
       $(e).addClass('selected');
 
-      console.log("searching for face", e, box);
+      $('.jumbotron').show();
+
+      // TODO: refactor this
+      $('#img2').attr('src', '');
+      $('#box2').hide();
+      $('#similarity').hide();
+      $('#totalMatches').text(0);
+      $('#curMatch').val(0);
+      $('#description').hide();
+      $('.pager').hide();
+
+      $('#message').text('Searching for matching faces…');
+      $('#loader').show();
 
       var canvas = $('#crop')[0];
       var ctx = canvas.getContext('2d');
