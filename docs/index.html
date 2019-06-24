@@ -93,6 +93,7 @@
             </div>
         </div>
     </div>
+    <canvas id="crop" style="display:none;"></canvas>
 </body>
 <script>
   var matches = [];
@@ -131,13 +132,55 @@
     rekognition.detectFaces(params, function (err, data) {
       if (err) console.log(err, err.stack); // an error occurred
       else {
-        console.log(data);
         var details = data.FaceDetails[0];
         var box = details.BoundingBox;
         imgE = $("#img1");
+        var top = imgE.height()*box.Top,
+            left = imgE.width()*box.Left,
+            width = imgE.width()*box.Width,
+            height = imgE.height()*box.Height;
         // 15px padding
-        $('#box1').css({top: imgE.height()*box.Top+15, left: imgE.width()*box.Left+15, width: imgE.width()*box.Width, height: imgE.height()*box.Height});
+        $('#box1').css({top: top+15, left: left+15, width: width, height: height});
         $('#box1').show();
+
+        var canvas = $('#crop')[0];
+        var ctx = canvas.getContext('2d');
+        imgE.ready(function(){
+            var top = imgE.get(0).naturalHeight*box.Top,
+                left = imgE.get(0).naturalWidth*box.Left,
+                width = imgE.get(0).naturalWidth*box.Width,
+                height = imgE.get(0).naturalHeight*box.Height;
+            ctx.canvas.width = width;
+            ctx.canvas.height = height;
+            ctx.drawImage(imgE[0], left, top, width, height, 0, 0, width, height);
+
+            var b64 = canvas.toDataURL();
+            var bytes = base64ImgToBytes(b64);
+
+            var collection = 'flickr'
+            var params = {
+                CollectionId: collection,
+                FaceMatchThreshold: 80,
+                Image: {
+                    Bytes: bytes,
+                }
+            };
+            rekognition.searchFacesByImage(params, function (err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else {
+                    matches = data.FaceMatches;
+                    if (matches.length == 0) {
+                        $('#message').text("No matches found");
+                        $('#loader').hide();
+                    } else {
+                        $('.jumbotron').hide();
+                        curMatch = 0;
+                        dispMatch();
+                    }
+                }
+            });
+
+        });
 
 
         $('#brightness').text(Number.parseFloat(details.Quality.Brightness).toPrecision(4)+'%');
@@ -145,37 +188,6 @@
         $('#sharpness').text(Number.parseFloat(details.Quality.Sharpness).toPrecision(4)+'%');
         colorInfo('#sharpness', details.Quality.Sharpness, 90, 70);
         $('#quality').show();
-
-        if (match.Similarity > 99) {
-            $('#simil').css({color: 'green'});
-        } else if (match.Similarity > 90) {
-            $('#simil').css({color: 'orange'});
-        } else {
-            $('#simil').css({color: 'red'});
-        }
-      }
-    });
-    var collection = 'flickr'
-    var params = {
-      CollectionId: collection,
-      FaceMatchThreshold: 80,
-      Image: {
-        Bytes: imageBytes
-      }
-    };
-    rekognition.searchFacesByImage(params, function (err, data) {
-      if (err) console.log(err, err.stack); // an error occurred
-      else {
-        console.log(data);
-        matches = data.FaceMatches;
-        if (matches.length == 0) {
-            $('#message').text("No matches found");
-            $('#loader').hide();
-        } else {
-            $('.jumbotron').hide();
-            curMatch = 0;
-            dispMatch();
-        }
       }
     });
   }
@@ -230,7 +242,6 @@
         var flickrApiKey = '686e331b830f5e61da5fc08906a328fa';
         var flickr = new Flickr(flickrApiKey);
         flickr.photos.getInfo(bits[3], function(response) {
-            console.log(response);
             var title = response.photo.title._content;
             var description = response.photo.description._content;
             $('#description a').attr('href', url);
@@ -251,6 +262,33 @@
 
   var imageBytes;
 
+  function base64ImgToBytes(b64) {
+      var jpg = true;
+      try {
+          image = atob(b64.split("data:image/jpeg;base64,")[1]);
+
+      } catch (e) {
+          jpg = false;
+      }
+      if (jpg == false) {
+          try {
+              image = atob(b64.split("data:image/png;base64,")[1]);
+          } catch (e) {
+              alert("Not an image file Rekognition can process");
+              return;
+          }
+      }
+      //unencode image bytes for Rekognition DetectFaces API
+      var length = image.length;
+      var bytes = new ArrayBuffer(length);
+      var ua = new Uint8Array(bytes);
+      for (var i = 0; i < length; i++) {
+          ua[i] = image.charCodeAt(i);
+      }
+
+      return bytes;
+  }
+
   //Loads selected image and unencodes image bytes for Rekognition DetectFaces API
   function ProcessImage() {
     AnonLog();
@@ -269,28 +307,9 @@
         var img = document.getElementById("img1");
         var image = null;
         img.src = e.target.result;
-        var jpg = true;
-        try {
-          image = atob(e.target.result.split("data:image/jpeg;base64,")[1]);
 
-        } catch (e) {
-          jpg = false;
-        }
-        if (jpg == false) {
-          try {
-            image = atob(e.target.result.split("data:image/png;base64,")[1]);
-          } catch (e) {
-            alert("Not an image file Rekognition can process");
-            return;
-          }
-        }
-        //unencode image bytes for Rekognition DetectFaces API
-        var length = image.length;
-        imageBytes = new ArrayBuffer(length);
-        var ua = new Uint8Array(imageBytes);
-        for (var i = 0; i < length; i++) {
-          ua[i] = image.charCodeAt(i);
-        }
+        imageBytes = base64ImgToBytes(e.target.result);
+
         //Call Rekognition
         DetectFaces();
       };
