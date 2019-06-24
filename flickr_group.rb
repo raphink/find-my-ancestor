@@ -48,8 +48,6 @@ loop do
       })
       rescue => e
         puts "W: failed to import #{ref} (#{url}): #{e}"
-        sleep 2
-        retry
       end
   end
 
