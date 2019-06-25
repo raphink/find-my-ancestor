@@ -138,6 +138,14 @@ user: britishlibrary
 user: northampton_museum
 londonatwar
 46226460@N00
+user: ottomanarchive
+user: nationalarchives
+user: 47290943@N03
+user: national_library_of_australia_commons
+user: nationallibrarynz
+user: 14456531@N07
+user: 25300312@N08
+user: banq
 
 
 # TODO galleries
