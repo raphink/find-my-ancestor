@@ -29,8 +29,8 @@ loop do
     url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
     ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
 
+    begin
     img = open(url)
-
     puts "Importing #{ref} (#{url}) into collection"
 
     rekognition.index_faces({
@@ -38,6 +38,9 @@ loop do
         image: { bytes: img.read },
         external_image_id: ref,
     })
+    rescue => e
+	    puts "W: failed to import #{ref} (#{url}): #{e}"
+    end
   end
 
   page += 1
