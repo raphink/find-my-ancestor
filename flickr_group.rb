@@ -34,13 +34,13 @@ loop do
 	  retry
   end
 
-  photos.each do |pic|
+  photos.each_with_index do |pic, i|
       url = "http://farm#{pic['farm']}.staticflickr.com/#{pic['server']}/#{pic['id']}_#{pic['secret']}_b.jpg"
       ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
 
       begin
       img = open(url)
-      puts "Importing #{ref} (#{url}) into collection"
+      puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
       rekognition.index_faces({
           collection_id: 'flickr',
           image: { bytes: img.read },
