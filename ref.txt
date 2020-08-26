@@ -158,6 +158,9 @@ user: usmcarchives
 67147471@N00
 albanygroup
 internetarchivebookimages
+644039@N20
+683885@N20
+438445@N22
 
 
 # TODO galleries
