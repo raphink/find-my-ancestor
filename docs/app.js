@@ -172,25 +172,35 @@ function dispMatch() {
     var img = match.Face.ExternalImageId;
     var bits = img.split(':');
     var imgE = $('#img2');
-    imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
-    var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
+
+
+    if (bits[0] === 'flickr') {
+        imgE.attr('src', "http://farm"+bits[1]+".staticflickr.com/"+bits[2]+"/"+bits[3]+"_"+bits[4]+"_b.jpg");
+        var url = "https://flic.kr/p/"+base58.encode(parseInt(bits[3]));
+
+        // Flickr title and description
+        var flickrApiKey = '686e331b830f5e61da5fc08906a328fa';
+        var flickr = new Flickr(flickrApiKey);
+        flickr.photos.getInfo(bits[3], function(response) {
+            var title = response.photo.title._content;
+            var description = response.photo.description._content;
+            $('#description a').attr('href', url);
+            $('#description a h3').text(title);
+            $('#description p').html(description);
+            $('#description').show();
+        });
+    } else if(bits[0] === 'reddit') {
+      console.log('Getting reddit pic '+img);
+      imgE.attr('src', 'http://i.redd.it/'+bits[3]);
+      var url = 'https://reddit.com/r/'+bits[1]+'/comments/'+bits[2];
+    } else {
+      console.log('Unknown provider '+bits[0]);
+    }
+
     $('#img2-link').attr('href', url);
     $('#simil').text(Number.parseFloat(match.Similarity).toPrecision(4)+'%');
     colorInfo('#simil', match.Similarity, 99, 90);
     $('#similarity').show();
-
-    // Flickr title and description
-    var flickrApiKey = '686e331b830f5e61da5fc08906a328fa';
-    var flickr = new Flickr(flickrApiKey);
-    flickr.photos.getInfo(bits[3], function(response) {
-        var title = response.photo.title._content;
-        var description = response.photo.description._content;
-        $('#description a').attr('href', url);
-        $('#description a h3').text(title);
-        $('#description p').html(description);
-        $('#description').show();
-    });
-
 
     var box = match.Face.BoundingBox;
     imgE.on('load', function() {
