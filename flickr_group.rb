@@ -17,7 +17,7 @@ rekognition = Aws::Rekognition::Client.new(
 
 group_name = ARGV[0]
 group_id = flickr.urls.lookupGroup(url: "https://www.flickr.com/groups/#{group_name}/").id
-last_known = "#{group_id}.last_known_page"
+last_known = "progress/#{group_id}.last_known_page"
 page = 1
 page = File.read(last_known).chomp.to_i if File.file?(last_known)
 imported = 0

@@ -22,7 +22,7 @@ rekognition = Aws::Rekognition::Client.new(
 subreddit = ARGV[0] || 'TheWayWeWere'
 imported = 0
 
-last_known = "reddit_#{subreddit}.last_known"
+last_known = "progress/reddit_#{subreddit}.last_known"
 
 after = File.read(last_known).chomp || nil
 
