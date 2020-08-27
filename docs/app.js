@@ -152,6 +152,13 @@ function nextMatch() {
     dispMatch();
 }
 
+function setDescription(url, title, description) {
+    $('#description a').attr('href', url);
+    $('#description a h3').text(title);
+    $('#description p').html(description);
+    $('#description').show();
+}
+
 function dispMatch() {
     $('#totalMatches').text(matches.length);
     $('#curMatch').val(curMatch+1);
@@ -184,15 +191,18 @@ function dispMatch() {
         flickr.photos.getInfo(bits[3], function(response) {
             var title = response.photo.title._content;
             var description = response.photo.description._content;
-            $('#description a').attr('href', url);
-            $('#description a h3').text(title);
-            $('#description p').html(description);
-            $('#description').show();
+            setDescription(url, title, description);
         });
     } else if(bits[0] === 'reddit') {
       console.log('Getting reddit pic '+img);
-      imgE.attr('src', 'http://i.redd.it/'+bits[3]);
-      var url = 'https://reddit.com/r/'+bits[1]+'/comments/'+bits[2];
+      imgE.attr('src', 'https://i.redd.it/'+bits[3]);
+      var url = 'https://www.reddit.com/r/'+bits[1]+'/comments/'+bits[2];
+
+      $.getJSON(url+'.json', function(data) {
+          var title = data[0].data.children[0].data.title;
+          var description = '';
+          setDescription(url, title, description);
+      });
     } else {
       console.log('Unknown provider '+bits[0]);
     }
