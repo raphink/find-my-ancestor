@@ -26,8 +26,12 @@ last_known = "reddit_#{subreddit}.last_known"
 
 after = File.read(last_known).chomp || nil
 
-while listing = session.subreddit(subreddit).listing(:top, after: after) do
+
+loop do
+  puts "Getting listing after #{after}"
+  listing = session.subreddit(subreddit).listing(:new, after: after)
   listing.each_with_index do |l, i|
+    puts l
     url = l.url
     uri = URI.parse(url)
     id = l.id
@@ -48,6 +52,8 @@ while listing = session.subreddit(subreddit).listing(:top, after: after) do
       puts "W: failed to import #{ref} (#{url}): #{e}"
     end
   end
+
+  puts "done with listing: #{listing}"
 
   imported += listing.to_a.length
 end
