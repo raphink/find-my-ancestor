@@ -42,13 +42,13 @@ while listing = session.subreddit(subreddit).listing(:top, after: after) do
         image: { bytes: img.read },
         external_image_id: ref,
       })
-      File.open(last_known, 'w') { |f| f.puts id }
+      after = l.name
+      File.open(last_known, 'w') { |f| f.puts after }
     rescue => e
       puts "W: failed to import #{ref} (#{url}): #{e}"
     end
   end
 
-  after = listing.last.id
   imported += listing.to_a.length
 end
 
