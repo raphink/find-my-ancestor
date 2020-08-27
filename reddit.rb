@@ -20,31 +20,36 @@ rekognition = Aws::Rekognition::Client.new(
 )
 
 subreddit = ARGV[0] || 'TheWayWeWere'
-page = 1
 imported = 0
 
-listing = session.subreddit(subreddit).listing(:top)
-listing.each_with_index do |l, i|
-  url = l.url
-  uri = URI.parse(url)
-  id = l.id
-  img = uri.path.sub(%r{^/}, '')
-  ref = "reddit:#{subreddit}:#{id}:#{img}"
+last_known = "reddit_#{subreddit}.last_known"
 
-  begin
-    img = open(url)
-    puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
-    rekognition.index_faces({
-      collection_id: 'flickr',
-      image: { bytes: img.read },
-      external_image_id: ref,
-    })
-  rescue => e
-    puts "W: failed to import #{ref} (#{url}): #{e}"
+after = File.read(last_known).chomp || nil
+
+while listing = session.subreddit(subreddit).listing(:top, after: after) do
+  listing.each_with_index do |l, i|
+    url = l.url
+    uri = URI.parse(url)
+    id = l.id
+    img = uri.path.sub(%r{^/}, '')
+    ref = "reddit:#{subreddit}:#{id}:#{img}"
+
+    begin
+      img = open(url)
+      puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
+      rekognition.index_faces({
+        collection_id: 'flickr',
+        image: { bytes: img.read },
+        external_image_id: ref,
+      })
+      File.open(last_known, 'w') { |f| f.puts id }
+    rescue => e
+      puts "W: failed to import #{ref} (#{url}): #{e}"
+    end
   end
-end
 
-page += 1
-imported += listing.length
+  after = listing.last.id
+  imported += listing.to_a.length
+end
 
 puts "imported #{imported} photos"
