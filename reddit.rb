@@ -39,7 +39,7 @@ loop do
     ref = "reddit:#{subreddit}:#{id}:#{img}"
 
     begin
-      img = open(url)
+      img = URI.open(url)
       puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
       rekognition.index_faces({
         collection_id: 'flickr',
