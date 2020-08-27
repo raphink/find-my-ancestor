@@ -39,13 +39,13 @@ loop do
       ref = "flickr:#{pic['farm']}:#{pic['server']}:#{pic['id']}:#{pic['secret']}"
 
       begin
-      img = open(url)
-      puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
-      rekognition.index_faces({
-          collection_id: 'flickr',
-          image: { bytes: img.read },
-          external_image_id: ref,
-      })
+        img = URI.open(url)
+        puts "[#{imported+i+1}] Importing #{ref} (#{url}) into collection"
+        rekognition.index_faces({
+            collection_id: 'flickr',
+            image: { bytes: img.read },
+            external_image_id: ref,
+        })
       rescue => e
         puts "W: failed to import #{ref} (#{url}): #{e}"
       end
