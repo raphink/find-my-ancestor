@@ -152,8 +152,9 @@ function nextMatch() {
     dispMatch();
 }
 
-function setDescription(url, title, description) {
+function setDescription(url, title, description, provider) {
     $('#description a').attr('href', url);
+    $('#description i').attr('class', 'fab fa-lg fa-'+provider);
     $('#description a h3').text(title);
     $('#description p').html(description);
     $('#description').show();
@@ -191,7 +192,7 @@ function dispMatch() {
         flickr.photos.getInfo(bits[3], function(response) {
             var title = response.photo.title._content;
             var description = response.photo.description._content;
-            setDescription(url, title, description);
+            setDescription(url, title, description, 'flickr');
         });
     } else if(bits[0] === 'reddit') {
       console.log('Getting reddit pic '+img);
@@ -201,7 +202,7 @@ function dispMatch() {
       $.getJSON(url+'.json', function(data) {
           var title = data[0].data.children[0].data.title;
           var description = '';
-          setDescription(url, title, description);
+          setDescription(url, title, description, 'reddit');
       });
     } else {
       console.log('Unknown provider '+bits[0]);
