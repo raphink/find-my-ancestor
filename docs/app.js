@@ -154,7 +154,7 @@ function nextMatch() {
 
 function setDescription(url, title, description, provider) {
     $('#description a').attr('href', url);
-    $('#description a h3').text('<i class="fab fa-lg fa-"'+provider+'"></i> '+title);
+    $('#description a h3').html('<i class="fab fa-lg fa-"'+provider+'"></i> '+title);
     $('#description p').html(description);
     $('#description').show();
 }
